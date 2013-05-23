@@ -1,0 +1,28 @@
+
+	<form name="frm_login" id="frm_login"  action="login/do_login.php" method="post" onsubmit="return ValidateElement( 'frm_login' , 'cb_user(data)' ,false)" > 
+    
+        <p class="heading_1">Login to your LABTAB Portal Account</p>
+        <div class="login_left">&nbsp;</div>
+        <div class="login_right"><div id="message" style="text-align:left;"> </div></div>
+        <div class="clear"></div>
+        <div class="login_input">
+            <div class="login_left"><strong>Email address:</strong></div>
+            <div class="login_right"><input type="text" class="login_input_bg" id="email" name="email" value="" /></div>
+            <div class="clear"></div>
+        </div>
+        <div class="login_input" >
+            <div class="login_left" style="padding-top:3px;" ><div><strong>Password:</strong></div>
+                <div style="padding: 0pt; margin: -4px 0pt 0pt; display: block;"><a href="getPassword.php" style="font-size:9px; color:#190051;">Forgot Password?</a></div>
+            </div>
+            <div class="login_right"><input  id="password" name="pw" type="password" class="login_input_bg"  value=""/></div>
+            <div class="clear"></div>
+        </div>
+        <div class="login_input" style="padding-right:267px;">
+            <button type="submit" value=""  id="btnSubmit" name="btnSubmit" class="submit_btn"><span>Submit</span></button>
+            <input id="validate" type="hidden" value="email:email||password:blank" name="validate">            
+            <div class="clear"></div>
+        </div>  
+
+	</form>
+
+

@@ -1,0 +1,193 @@
+<?php
+$s = $this->specimen;
+$values = array_merge($s->getDonor()->toArray(), $s->toArray());
+$from = $s->getFrom();
+$finalized = $s->getFinalized();
+$label_text = $s->getLabelText();
+?>
+
+<script type="text/javascript">
+	$(document).ready(initDetail); 
+	var from = "<?php echo $from; ?>";
+	var finalized_hidden = "<?php echo $finalized; ?>";
+</script>
+
+                        <div id="message" ></div>
+                        <div id="tabs">
+                            <ul>
+                                <li><a href="#fragment-1"><span>Specimen Info</span></a></li>
+                                <li><a href="#fragment-2"><span>Donor Contact Info</span></a></li> 
+                                <li><a href="#fragment-3"><span>Attached Images</span></a></li> 
+                                <li><a href="#fragment-4"><span>Attached Files</span></a></li> 
+                                <?php
+                                if ($label_text != 'court') {
+                                    echo '<li><a href="#fragment-5"><span>Specimen Validation</span></a></li> 
+                                            <li><a href="#fragment-6"><span>Screen</span></a></li>';
+                                }
+                                ?>
+
+                                <div class="clear"></div>
+                            </ul>
+                            <div class="tab_content_top"></div>
+                            <div id="tab_content_body" class="tab_content_body">
+
+                                <form name="frm_order" id="frm_order" action="" method="post" onsubmit="return submitMe();" >
+                                    <div id="fragment-1">
+<?php echo $this->specimenInfo($values); ?>
+                                        <div class="clear"></div>
+                                        <div class="login_input" id="contentheader">
+<?php echo $this->pocPositives($s, false); ?>                                        
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <div id="fragment-2" style="min-height:246px;">
+                                        <div class="login_input">
+                                            <div class="login_left"><strong>SSN</strong></div>
+                                            <div class="login_right">
+                                                <div class="input_box_left"><input name="ssn" id="ssn" type="text" class="login_input_bg_m"  value="<?php echo $values['ssn']; ?>"/></div>
+                                                <div class="clear"></div>
+                                            </div>                     
+                                            <div class="login_left"><strong></strong></div>
+                                            <div class="login_right">
+                                                <div class="input_box_left"><input name="none" id="none" type="hidden" class="login_input_bg_m"  value=""/></div>
+                                            </div>
+                                        </div>
+                                        <div class="clear"></div>
+                                        <br/>
+                                        <div class="login_input">
+                                            <div class="login_left"><strong>First Name</strong></div>
+                                            <div class="login_right">
+                                                <div class="input_box_left"><input name="first_name" id="first_name" type="text" class="login_input_bg_m"  value="<?php echo $values['first_name']; ?>"/></div>
+                                                <div class="clear"></div>
+                                            </div>                     
+                                            <div class="login_left"><strong>Last Name</strong></div>
+                                            <div class="login_right">
+                                                <div class="input_box_left"><input name="last_name" id="last_name" type="text" class="login_input_bg_m"  value="<?php echo $values['last_name']; ?>"/></div>
+                                            </div>
+                                        </div>
+                                        <div class="clear"></div>
+                                        <br/>
+                                        <div class="login_input">
+                                            <div class="login_left"><strong>Street Address</strong></div>
+                                            <div class="login_right">
+                                                <div class="input_box_left"><input name="address" id="address" type="text" class="login_input_bg_m"  value="<?php echo $values['address']; ?>"/></div>
+                                                <div class="clear"></div>
+                                            </div>                     
+                                            <div class="login_left"><strong>City</strong></div>
+                                            <div class="login_right">
+                                                <div class="input_box_left"><input name="city" id="city" type="text" class="login_input_bg_m"  value="<?php echo $values['city']; ?>"/></div>
+                                            </div>
+                                        </div>
+                                        <div class="clear"></div>
+                                        <br/>                                                                                
+                                        <div class="login_input">
+                                            <div class="login_left"><strong>State</strong></div>
+                                            <div class="login_right">
+                                                <div class="input_box_left"><input name="state" id="state" type="text" class="login_input_bg_m"  value="<?php echo $values['state']; ?>"/></div>
+                                                <div class="clear"></div>
+                                            </div>                     
+                                            <div class="login_left"><strong>Zip</strong></div>
+                                            <div class="login_right">
+                                                <div class="input_box_left"><input name="zip" id="zip" type="text" class="login_input_bg_m"  value="<?php echo $values['zip']; ?>"/></div>
+                                            </div>
+                                        </div>
+                                        <div class="clear"></div>
+                                        <br/>
+                                        <div class="login_input">
+                                            <div class="login_left"><strong>Phone</strong></div>
+                                            <div class="login_right">
+                                                <div class="input_box_left"><input name="phone" id="phone" type="text" class="login_input_bg_m"  value="<?php echo $values['phone']; ?>"/></div>
+                                                <div class="clear"></div>
+                                            </div>                     
+                                            <div class="login_left"><strong>DOB</strong></div>
+                                            <div class="login_right">
+                                                <div class="input_box_left"><input name="dob" id="dob" type="text" class="login_input_bg_m"  value="<?php echo $values['dob']; ?>"/></div>
+                                            </div>
+                                        </div>
+                                        <div class="clear"></div>
+                                        <br/>
+
+<?php echo $this->pocPositives($s, false); ?>
+                                         
+                                    </div>
+
+                                    <div id="fragment-3">                                   
+																			<?php if (count($s->getImageUrls()) > 0) { ?>
+																			<div class="slider-wrapper theme-default">
+                                      	<div class="ribbon"></div>
+                                       	<div id="slider" class="nivoSlider">
+																					<?php																				
+																					foreach ($s->getImageUrls() as $key => $value) 
+																					{
+																						 echo '<img src="' . $value . '" alt="" title="' . $key . '"/>';
+																					}
+																					?>
+																				</div>
+																			</div>
+																			<?php } else { ?>
+  																			<div class="login_input"><p style="color:red">No attached images</p></div>
+																			<?php } ?>
+																		</div>
+                                    
+                                    
+                                    <div id="fragment-4">
+                                        <?php
+                                        if ($_SESSION['user_type'] == "internal") {
+                                            echo '<div id="file-uploader"></div>';
+                                        }
+                                        
+																				if 	(!empty($this->files))
+																				{
+																					foreach ($this->files as $fileinfo)
+																					{		
+																						echo '
+            <div class="login_input">
+                <div class="login_input">
+                    <div class="login_left"><strong><a href="/filetransfer/do_download.php?path=' . $fileinfo['path']
+                . '" style="color:#6D6D6D; text-decoration:none;">' . $fileinfo['file'] . ' </a></strong></div>
+                </div>
+            </div>
+            ';
+																						
+																						
+																						}																			
+																					
+																				}
+																				else 
+																				{?>
+																					<div class="login_input">
+																					<div class="login_left"><strong>No Attached Files </strong></div>
+																					</div>
+																				<?php } ?>                                                                               
+                                    </div>    
+
+
+                                    <?php
+                                    if ($label_text != 'court') 
+                                    {
+                                    	// fragment 5
+                                     	echo $this->validationTable($this->validate, $finalized, $label_text);                                                                               
+                                      
+                                     	//fragment 6
+                                      echo $this->screenTable($this->screen, $finalized, $label_text);
+                                    }
+                                    ?>
+                                </form>
+                                <?php
+                                if ($_SESSION['email'] == 'jlupi@usaccuscreen.com' && $label_text == 'court' && $finalized == '0') 
+                                {
+                                    // Court mode - Begin finalization
+                                    echo '<span style="display: inline-block;"><div id="finalize_uploader"></div></span>';
+                                } else if ($_SESSION['email'] == 'jlupi@usaccuscreen.com' && $label_text == 'court' && $finalized == '1') 
+                                {
+                                    // Court mode - Begin unfinalization
+                                    echo '<div style="text-align:center"><button onclick = "finalization()">Unfinalize</button></div>';
+                                }
+                                ?>
+                            </div> <!--  //tab_content_body  -->
+
+                            <div class="tab_content_bottom"></div>
+                        </div> <!--  //tabs  -->
+
+  

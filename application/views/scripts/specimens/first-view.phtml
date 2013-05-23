@@ -1,0 +1,39 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		promptFirstview();
+		
+	}); 
+</script>
+
+<div class="login_input" id="contentheader">
+    <div id="display_content1" class="main_content">
+        <div class="round_top"><div class="round_top_left"></div><div class="round_top_mid"></div><div class="round_top_right"></div><div class="clear"></div></div>
+        <table id="userTable" cellspacing="0"  class="tableA tableBlowOutPreventer" cellpadding="0" >
+            <tr>
+                <th colspan="11" class="grid_heading"><div style="float:left" id="tableTitle">Listing of Portal Users from <?php echo $this->orgName; ?></div></th>
+            </tr>
+            <tr class="bar">        
+                <th style="text-align:left; padding-left:5px;">Name</th>
+                <th style="text-align:left; padding-left:5px;">Email</th>                   
+            </tr>
+            <?php
+            	foreach ($this->portalUsers as $row)
+            	{
+                echo '<tr>';
+                echo '<td style="color:#404040; font-size:10px;">' . $row->getUserFname() . ' ' . $row->getUserLname() . '</td>';
+                echo '<td style="color:#404040; font-size:10px;">' . $row->getEmail() . '</td>';
+                echo '</tr>';
+            	}
+            ?>
+        </table>
+        <div class="round_bottom">
+            <div class="round_bottom_left"></div>
+            <div class="round_bottom_mid"></div>
+            <div class="round_bottom_right"></div>
+            <div class="clear"></div>
+        </div>  
+    </div>
+</div>
+<div class="search_input_div" style="padding-top: 17px;padding-left:291px;float:right;">
+    <button type="button" onclick="verifyContact();" name="btnCancel" id="btnCancel" value="" class="btnSearch1" style="float:none;"><span>Verify this organization has been called</span></button> 
+</div>  

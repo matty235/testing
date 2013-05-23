@@ -1,0 +1,145 @@
+            <div class="top">
+                <div class="top_left"><a href="/specimens.php" style="text-decoration:none;"><img src="/images/logo.png" alt="" /></a></div>
+                <div class="top_right">
+                    <div class="up_nav">
+                        <div class="up_nav_left"></div>
+                        <div class="up_nav_right"></div>
+                        <div class="clear"></div>
+                    </div>
+                    <div class="clear"></div>
+                    <?php
+                    //navDiv('admin'); // MODIFY ME
+                    ?>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+            </div>             
+ 
+            <div class="content_wrap">
+                <div class="content_bg_top"></div>
+                <div class="content_bg_mid">                        
+                    <div style="text-align: center;"><span id="message">
+                    								Password constraints:<br/>
+                                    Minimum 6 characters, maximum 20<br/>
+                                    At least one upercase letter<br/>
+                                    At least one lowercase letter<br/>
+                                    At least one number";
+                                    </span></div>
+ 										<form name="frm_login" id="frm_login"  action="" method="" >
+	   		 										<input type="hidden" id="key" name="from" value="<?php echo $this->key; ?>" />
+    												<input type="hidden" id="email" name="email" value="<?php echo $this->email; ?>" />
+                        
+                            <div class="login_input">
+                                <div class="login_left"><strong>Enter password:</strong></div>
+                                <div class="login_right"><input type="password" class="required login_input_bg" id="password1" name="password1" value="" /></div>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="login_input">
+                                <div class="login_left"><strong>Confirm password:</strong></div>
+                                <div class="login_right"><input type="password" class="required login_input_bg" id="password2" name="password2" value="" equalTo="#password1"/></div>
+                                <div class="clear"></div>
+                            </div>
+                            <div class="login_input" style="padding-right:267px;">
+                                <button type="submit" value=""  id="btnSubmit" name="btnSubmit" class="submit_btn"><span>Submit</span></button>                                
+                                <div class="clear"></div>
+                            </div>
+                     </form>
+                </div>
+
+                <div class="content_bg_bottom"></div>
+            </div>
+            
+   <script type="text/javascript">
+        $(document).ready(function(){ 
+            jQuery.validator.addMethod("password", function( value, element ) {
+                var upperCase= new RegExp('[A-Z]');
+                var lowerCase= new RegExp('[a-z]');
+                var numbers = new RegExp('[0-9]');
+                    
+                    
+                var result = this.optional(element) || value.length >= 6 && /\d/.test(value) && /[a-z]/i.test(value)
+                    && value.length <= 20 && value.match(upperCase) ;
+                if (!result) {
+                    element.value = "";
+                    var validator = this;
+                    setTimeout(function() {
+                        validator.blockFocusCleanup = true;
+                        element.focus();
+                        validator.blockFocusCleanup = false;
+                    }, 1);
+                }
+                return result;
+            }, "Your password does not meet the requirements.");            
+            jQuery.validator.messages.required = "";
+            $("form").validate({
+                invalidHandler: function(e, validator) {
+                    var errors = validator.numberOfInvalids();
+                    if (errors) {
+                        var message;
+                        if (errors == 1)
+                        	message = 'You missed 1 field. It has been highlighted below';
+                        else 
+                          message = 'You missed ' + errors + ' fields.  They have been highlighted below';
+                        $("div.error span").html(message);
+                        $("div.error").show();
+                    } else {
+                        $("div.error").hide();
+                    }
+                },
+                onkeyup: false,
+                submitHandler: function() {                    
+                    var form_data = {
+                        password: $('#password1').val(),
+                        email: $('#email').val(),
+                        key: $('#key').val(),
+                        ajax: '1'		
+                    };
+                    $.ajax({
+                        url: "/auth/confirmReset",
+                        type: 'POST',
+                        data: form_data,
+                        success: function(msg) {     
+                            if (msg == 'success') {
+                                $.prompt("Password reset successful.", {
+                                    buttons: {'Continue with login': 0 },
+                                    focus: 1,
+                                    submit:function(e,v,m,f){ 
+                                        if(v==0) {
+                                            $.prompt.close(); 
+                                            window.location.assign('/');
+                                        }
+                                        return false;
+                                    }
+                                });
+                            } else {
+                                $.prompt("Password reset failed " + msg, {
+                                    buttons: {'Continue': 0 },
+                                    focus: 1,
+                                    submit:function(e,v,m,f){ 
+                                        if(v==0) {
+                                            $.prompt.close(); 
+                                            window.location.assign('/');
+                                        }
+                                        return false;
+                                    }
+                                });
+                            }
+                        }
+                    }); 
+                },
+                messages: {
+                    password2: {
+                        required: " ",
+                        equalTo: "Please enter the same password as above"	
+                    },
+                    email: {
+                        required: " ",
+                        email: "Please enter a valid email address, example: you@yourdomain.com",
+                        remote: jQuery.validator.format("{0} is already taken, please enter a different address.")	
+                    }
+                },
+                debug:true
+            });
+            
+        });
+    </script>            

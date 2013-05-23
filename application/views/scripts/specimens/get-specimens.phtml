@@ -1,0 +1,10 @@
+<?php 
+	foreach ($this->specimens as $row) {
+   	echo "<tr>";
+   	echo '<td style="font-size:10px;"><a style="color:#404040;" href="/specimens/detail/number/' . $row["number"] . '">' . $row["number"] . '</a></td>';
+   	echo '<td style="color:#404040; font-size:10px;">' . $row["firstName"] . '</td>';
+   	echo '<td style="color:#404040; font-size:10px;">' . $row["lastName"] . '</td>';
+   	echo '<td style="color:#404040; font-size:10px;">' . $row["received"] . '</td>';
+   	echo '</tr>';
+  }	    	
+?>	    	

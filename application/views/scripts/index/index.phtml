@@ -1,0 +1,75 @@
+<?php var_dump($_SERVER);?>
+
+<script type="text/javascript">
+	$(document).ready(initializeIndex); 
+</script>
+
+<link href="http://app.atcostfulfillment.com/js/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="http://app.atcostfulfillment.com/js/uploadify/swfobject.js"></script>
+<script type="text/javascript" src="http://app.atcostfulfillment.com/js/uploadify/jquery.uploadify.v2.1.4.min.js"></script>
+ 
+
+
+                                <div class="search_top_mid"><div class="search_top_left"></div><div class="search_top_right"></div></div>
+
+                                <div class="search_mid_right">
+                                    <div class="search_mid_left">
+                                        <div class="search_mid_body">
+                                            <div class="search_input_div">
+                                                <strong>Social</strong>
+                                                <br>
+                                                <span id="sp_mywarehouse" class="filter_search_select_m"><input type="text" id="socialInput" name="socialInput"/></span>
+                                                <div id="message"></div> 
+                                            </div>
+                                               
+                                            <div class="search_input_div"><strong>First Name</strong><br /><span class="filter_search_select_m">
+                                                    <input type="text" name="firstInput" id="firstInput" /></span></div>
+                                            <div class="search_input_div"><strong>Last Name</strong><br /><span class="filter_search_select_m" id="sp_acfproducts">
+                                                <input type="text" name="lastInput" id="lastInput"/></div>
+                                            <div class="search_input_div"><strong>Specimen Number</strong><br /><span class="filter_search_selet_m" id="sp_acfproducts">
+                                                <input type="text" name="numberInput" id="numberInput"/></div>                                           
+                                            <div class="search_input_div"><strong>From</strong><br/>
+                                                <input readonly="readonly" type="text" id="fromdate" value="01/01/2010" name="fromdate" class="filter_search_input_s" style="border:none;"></div>
+                                            <div class="search_input_div" style="padding-right:0;"><strong>To</strong><br/>
+                                                <input readonly="readonly" type="text" id="todate" value="<?php echo date("m/d/Y", time() + 86400); ?>" name="todate" class="filter_search_input_s"
+                                                       style="border:none;"></div>
+                                            <div class="search_input_div" style="padding-top: 17px;padding-left:291px;float:right;">
+                                                <button class="btnCancel1" value=""
+                                                        id="btnCancel" name="btnCancel" onclick="clearFilters()" type="button"><span>Clear</span></button>&nbsp;&nbsp;
+                                                <button type="button" onclick="getSpecimens();" name="btnCancel" id="btnCancel" value="" class="btnSearch1" style="float:none;"><span>Search</span></button> 
+                                            </div>  
+                                            <div class="clear"></div>
+                                        </div>
+                                    </div>
+                                
+                                <div class="search_bottom_mid"><div class="search_bottom_left"></div><div class="search_bottom_right"></div></div>
+                            		</div>
+
+
+                            <div class="clear"></div>
+
+
+                            <div class="login_input" id="contentheader">
+                                <div id="display_content1" class="main_content">
+                                    <div class="round_top"><div class="round_top_left"></div><div class="round_top_mid"></div><div class="round_top_right"></div><div class="clear"></div></div>
+                                    <table id="specimenTable" cellspacing="0"  class="tableA tableBlowOutPreventer" cellpadding="0" >
+                                        <tr>
+                                            <th colspan="11" class="grid_heading"><div style="float:left">Specimen Listing</div></th>
+                                        </tr>
+                                        <tr class="bar">        
+                                            <th style="text-align:left; padding-left:5px;">Specimen ID</th>
+                                            <th style="text-align:left; padding-left:5px;">Donor First</th>
+                                            <th style="text-align:left; padding-left:5px;">Donor Last</th>
+                                            <th style="text-align:left; padding-left:5px;">Received</th>                                            
+                                        </tr>
+                                    </table>
+                                    <div class="round_bottom">
+
+                                        <div class="round_bottom_left"></div>
+                                        <div class="round_bottom_mid"></div>
+                                        <div class="round_bottom_right"></div>
+                                        <div class="clear"></div>
+                                    </div>  
+                                </div>
+                            </div>
+

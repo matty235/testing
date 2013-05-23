@@ -1,0 +1,116 @@
+<script type="text/javascript">
+    $(document).ready(function(){
+			initUsers();
+    });
+</script>
+
+<div id="tabs">
+		<ul>
+				<li><a href="#fragment-1"><span>Create User</span></a></li>
+				<li><a href="#fragment-2"><span>Edit User</span></a></li>
+				<div class="clear"></div>
+		</ul>
+		<div class="tab_content_top"></div>
+		<div id="tab_content_body" class="tab_content_body">
+				<div id="fragment-1">
+						<form name="frm_order" id="frm_order" method="post" action="">
+								<div class="login_input">
+										<div class="login_left"><strong>First Name </strong></div>
+										<div class="login_right">
+											<div class="input_box_left"><input class="required" minlength="1" name="first_name" id="first_name" type="text" class="login_input_bg_m"/></div>
+											<div class="inputbox_desc_div"><p class="visa_txt"></p></div>
+											<div class="clear"></div>
+										</div>										
+										<div class="clear"></div>
+								</div>
+								<div class="login_input">
+										<div class="login_left"><strong>Last Name </strong></div>
+										<div class="login_right">
+<div class="input_box_left"><input class="required"	minlength="1" name="last_name" id="last_name" type="text" class="login_input_bg_m"/></div>
+<div class="clear"></div>
+										</div>
+										<div class="clear"></div>
+								</div>
+								<div class="login_input">
+										<div class="login_left"><strong>Email </strong></div>
+										<div class="login_right">
+<div class="input_box_left"><input class="required email" name="email" id="email" type="text" class="login_input_bg_m"/></div>
+<div class="clear"></div>
+										</div>
+										<div class="clear"></div>
+								</div>
+								<div class="login_input">
+										<div class="login_left"><strong>Organization </strong></div>
+										<div class="login_right">
+<div class="input_box_left">
+		<select id="labtab_user">
+				<?php foreach ($this->labtabUsers as $row) { 
+					$row = $row->toArray();
+					echo "<option value='" . $row['labtab_username'] . "'>" . $row['labtab_username'] . " - " .
+							$row['labtab_username'] . " (" . $row['user_type'] . ")</option>";
+					
+				}?>
+				
+		</select>
+</div>
+<div class="clear"></div>
+										</div>
+										<div class="clear"></div>
+								</div>
+								<div class="login_input" >
+										<div class="login_left"><div id="message1"></div></div>
+										<div class="login_right">
+											<div class="clear"></div>
+										</div>
+										<div class="clear"></div>
+								</div>
+								<div class="login_input" >
+										<button type="submit" name="btnSubmit" id="btnSubmit" value="" class="submit_btn" ><span>Save</span></button>
+										&nbsp; &nbsp; 
+										<div class="clear"></div>
+								</div>
+						</form>
+				</div>
+				<div id="fragment-2">
+						<table id="userTable" cellspacing="0"	class="tableA tableBlowOutPreventer" cellpadding="0" >
+								<tr>
+										<th colspan="11" class="grid_heading"><div style="float:left">Portal User Listing</div></th>
+								</tr>
+								<tr class="bar">				
+										<th style="text-align:left; padding-left:5px;">Organization</th>
+										<th style="text-align:left; padding-left:5px;">Org LABTAB User Name</th>
+										<th style="text-align:left; padding-left:5px;">User Email</th>
+										<th style="text-align:left; padding-left:5px;">User First</th>
+										<th style="text-align:left; padding-left:5px;">User Last</th>
+										<th style="text-align:left; padding-left:5px;">User Type</th> 
+										<th style="text-align:left; padding-left:5px;">Delete</th>											
+
+								</tr>
+
+				<?php foreach ($this->portalUsers as $row) { 				
+					$trID = str_replace('@', '12345', $row['email']);
+					echo '<tr id="' . $trID . '" >';
+					echo '<td style="color:#404040; font-size:10px;">' . $row["labtab_username"] . '</td>';
+					echo '<td style="color:#404040; font-size:10px;">' . $row["org_name"] . '</td>';
+					echo '<td style="color:#404040; font-size:10px;">' . $row["email"] . '</td>';
+					echo '<td style="color:#404040; font-size:10px;">' . $row["user_fname"] . '</td>';
+					echo '<td style="color:#404040; font-size:10px;">' . $row["user_lname"] . '</td>';
+					echo '<td style="color:#404040; font-size:10px;">' . $row["user_type"] . '</td>';
+					echo '<td><img id="' . $trID . '_button" class="button" src="/css/style_images/icon-red-x.png" /></td>';
+					echo '</tr>';
+				} ?>
+				
+				
+					
+						</table>
+						<div class="round_bottom">
+
+								<div class="round_bottom_left"></div>
+								<div class="round_bottom_mid"></div>
+								<div class="round_bottom_right"></div>
+								<div class="clear"></div>
+						</div> 
+				</div>
+		</div>	 
+</div>
+<div class="tab_content_bottom"></div>

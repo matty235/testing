@@ -1,0 +1,15 @@
+<?php 
+	foreach ($this->donors as $row)
+	{
+			echo '<tr" >';
+			echo '<td style="color:#404040; font-size:10px;">' . ucfirst($row['first_name']) . ' ' . ucfirst($row['last_name']) . '</td>';
+			echo '<td style="color:#404040; font-size:10px;">' . $row["dob"] . '</td>';
+			echo '<td style="color:#404040; font-size:10px;">' . $row["phone"] . '</td>';
+			echo '<td style="color:#404040; font-size:10px;">' . $row["address"] . '</td>';
+			echo '<td style="color:#404040; font-size:10px;">' . $row["city"] . '</td>';
+			echo '<td style="color:#404040; font-size:10px;">' . $row["state"] . '</td>';
+			echo '<td style="color:#404040; font-size:10px;">' . $row["zip"] . '</td>';
+			echo '</tr>';		
+	}
+
+?>

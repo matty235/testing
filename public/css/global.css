@@ -1,0 +1,34 @@
+p, img, input, textarea, span, form, select {
+	padding:0px;
+	margin:0px;
+}
+a img,:link img,:visited img {
+	border: none;
+}
+
+a:active {
+outline: none;
+}
+
+a:focus {
+-moz-outline-style: none;
+}
+* :focus { outline: 0; }
+
+input[type=text]:focus,
+
+input[type=password]:focus {
+  outline: 0 none;
+}
+select:focus {
+  outline: 0 none;
+}
+
+#printarea{ display:none; }
+
+@media print {
+	 .main_div{display:none;}
+	 .non_printable{display:none;}
+	 .non_printable *{display:none;}
+	 #printarea{ display:block; width:945; }
+ }

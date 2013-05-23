@@ -1,0 +1,98 @@
+<script type="text/javascript">
+	$(document).ready(initDonorsCreate);
+</script>
+
+<div class="tab_content_top"></div>
+<div id="tab_content_body" class="tab_content_body">   
+    <form name="frm_order" id="frm_order" method="post" action="">                                                              
+        <div class="login_input">
+            <div class="login_left"><strong>Organization Name</strong></div>
+            <div class="login_right">
+                <span id="sp_mywarehouse" class="filter_search_select_m">
+                <select id="labtab_select" name="labtab_select"   >
+					        <?php
+					        if ($_SESSION['user_type'] == 'external') {
+					            echo '<option value="' . $_SESSION['from'] . '" >' . $_SESSION['from'] . '</option>';
+					        } else {          
+					          foreach ($this->labtabUsers as $l)
+					          	echo '<option value="' . $l->getLabtabUsername() . '" > ' . $l->getOrgName() . ' </option>';
+					        }
+					        ?>              
+								</select>
+                </span>
+                <div class="clear"></div>
+            </div>                     
+            <div class="login_left"><strong>SSN</strong></div>
+            <div class="login_right">
+                <div class="input_box_left"><input class="required login_input_bg_m" minlength="9" name="ssn" id="ssn" type="text"/></div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <br/>
+        <div class="login_input">
+            <div class="login_left"><strong>First Name</strong></div>
+            <div class="login_right">
+                <div class="input_box_left"><input class="required login_input_bg_m" minlength="2" name="first_name" id="first_name" type="text"/></div>
+                <div class="clear"></div>
+            </div>                     
+            <div class="login_left"><strong>Last Name</strong></div>
+            <div class="login_right">
+                <div class="input_box_left"><input class="required login_input_bg_m" name="last_name" id="last_name" type="text"/></div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <br/>
+        <div class="login_input">
+            <div class="login_left"><strong>Street Address</strong></div>
+            <div class="login_right">
+                <div class="input_box_left"><input class="required login_input_bg_m" name="address" id="address" type="text"/></div>
+                <div class="clear"></div>
+            </div>                     
+            <div class="login_left"><strong>City</strong></div>
+            <div class="login_right">
+                <div class="input_box_left"><input class="required login_input_bg_m" name="city" id="city" type="text"/></div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <br/>                                                                                
+        <div class="login_input">
+            <div class="login_left"><strong>State</strong></div>
+            <div class="login_right">
+                <div class="input_box_left"><input class="required login_input_bg_m" name="state" id="state" type="text"/></div>
+                <div class="clear"></div>
+            </div>                     
+            <div class="login_left"><strong>Zip</strong></div>
+            <div class="login_right">
+                <div class="input_box_left"><input class="required login_input_bg_m" name="zip" id="zip" type="text"/></div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <br/>
+        <div class="login_input">
+            <div class="login_left"><strong>Phone</strong></div>
+            <div class="login_right">
+                <div class="input_box_left"><input class="required login_input_bg_m" name="phone" id="phone" type="text"/></div>
+                <div class="clear"></div>
+            </div>                     
+            <div class="login_left"><strong>DOB</strong></div>
+            <div class="login_right">
+                <div class="input_box_left"><input class="required login_input_bg_m" name="dob" id="dob" type="text"/></div>
+            </div>
+        </div>
+        <div class="login_input" >
+            <div class="login_left"><div id="message1"></div></div>
+            <div class="login_right">                                                
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+        <br/>
+        <div class="login_input" >
+            <button type="submit" name="btnSubmit" id="btnSubmit" value="" class="submit_btn" ><span>Save</span></button>
+            &nbsp; &nbsp; 
+            <div class="clear"></div>
+        </div>    
+    </form>
+</div>
+<div class="tab_content_bottom"></div>
