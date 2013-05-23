@@ -3,7 +3,7 @@
 /*
  * This file is part of the Symfony package.
  *
- * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien@symfony.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -17,24 +17,28 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Helper\HelperSet;
 
 /**
  * Base class for all commands.
  *
- * @author Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @api
  */
 class Command
 {
-    protected $name;
-    protected $namespace;
-    protected $aliases;
-    protected $definition;
-    protected $help;
-    protected $application;
-    protected $description;
-    protected $ignoreValidationErrors;
-    protected $applicationDefinitionMerged;
-    protected $code;
+    private $application;
+    private $name;
+    private $aliases;
+    private $definition;
+    private $help;
+    private $description;
+    private $ignoreValidationErrors;
+    private $applicationDefinitionMerged;
+    private $code;
+    private $synopsis;
+    private $helperSet;
 
     /**
      * Constructor.
@@ -42,6 +46,8 @@ class Command
      * @param string $name The name of the command
      *
      * @throws \LogicException When the command name is empty
+     *
+     * @api
      */
     public function __construct($name = null)
     {
@@ -62,13 +68,75 @@ class Command
     }
 
     /**
+     * Ignores validation errors.
+     *
+     * This is mainly useful for the help command.
+     */
+    public function ignoreValidationErrors()
+    {
+        $this->ignoreValidationErrors = true;
+    }
+
+    /**
      * Sets the application instance for this command.
      *
      * @param Application $application An Application instance
+     *
+     * @api
      */
     public function setApplication(Application $application = null)
     {
         $this->application = $application;
+        if ($application) {
+            $this->setHelperSet($application->getHelperSet());
+        } else {
+            $this->helperSet = null;
+        }
+    }
+
+    /**
+     * Sets the helper set.
+     *
+     * @param HelperSet $helperSet A HelperSet instance
+     */
+    public function setHelperSet(HelperSet $helperSet)
+    {
+        $this->helperSet = $helperSet;
+    }
+
+    /**
+     * Gets the helper set.
+     *
+     * @return HelperSet A HelperSet instance
+     */
+    public function getHelperSet()
+    {
+        return $this->helperSet;
+    }
+
+    /**
+     * Gets the application instance for this command.
+     *
+     * @return Application An Application instance
+     *
+     * @api
+     */
+    public function getApplication()
+    {
+        return $this->application;
+    }
+
+    /**
+     * Checks whether the command is enabled or not in the current environment
+     *
+     * Override this to check for x or y and return false if the command can not
+     * run properly under the current conditions.
+     *
+     * @return Boolean
+     */
+    public function isEnabled()
+    {
+        return true;
     }
 
     /**
@@ -91,7 +159,7 @@ class Command
      *
      * @return integer 0 if everything went fine, or an error code
      *
-     * @throws \LogicException When this abstract class is not implemented
+     * @throws \LogicException When this abstract method is not implemented
      * @see    setCode()
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -132,11 +200,18 @@ class Command
      * @param InputInterface  $input  An InputInterface instance
      * @param OutputInterface $output An OutputInterface instance
      *
+     * @return integer The command exit code
+     *
      * @see setCode()
      * @see execute()
+     *
+     * @api
      */
     public function run(InputInterface $input, OutputInterface $output)
     {
+        // force the creation of the synopsis before the merge with the app definition
+        $this->getSynopsis();
+
         // add the application arguments and options
         $this->mergeApplicationDefinition();
 
@@ -159,9 +234,9 @@ class Command
 
         if ($this->code) {
             return call_user_func($this->code, $input, $output);
-        } else {
-            return $this->execute($input, $output);
         }
+
+        return $this->execute($input, $output);
     }
 
     /**
@@ -175,6 +250,8 @@ class Command
      * @return Command The current instance
      *
      * @see execute()
+     *
+     * @api
      */
     public function setCode(\Closure $code)
     {
@@ -186,16 +263,15 @@ class Command
     /**
      * Merges the application definition with the command definition.
      */
-    protected function mergeApplicationDefinition()
+    private function mergeApplicationDefinition()
     {
         if (null === $this->application || true === $this->applicationDefinitionMerged) {
             return;
         }
 
-        $this->definition->setArguments(array_merge(
-            $this->application->getDefinition()->getArguments(),
-            $this->definition->getArguments()
-        ));
+        $currentArguments = $this->definition->getArguments();
+        $this->definition->setArguments($this->application->getDefinition()->getArguments());
+        $this->definition->addArguments($currentArguments);
 
         $this->definition->addOptions($this->application->getDefinition()->getOptions());
 
@@ -205,9 +281,11 @@ class Command
     /**
      * Sets an array of argument and option instances.
      *
-     * @param array|Definition $definition An array of argument and option instances or a definition instance
+     * @param array|InputDefinition $definition An array of argument and option instances or a definition instance
      *
      * @return Command The current instance
+     *
+     * @api
      */
     public function setDefinition($definition)
     {
@@ -226,10 +304,25 @@ class Command
      * Gets the InputDefinition attached to this Command.
      *
      * @return InputDefinition An InputDefinition instance
+     *
+     * @api
      */
     public function getDefinition()
     {
         return $this->definition;
+    }
+
+    /**
+     * Gets the InputDefinition to be used to create XML and Text representations of this Command.
+     *
+     * Can be overridden to provide the original command representation when it would otherwise
+     * be changed by merging with the application InputDefinition.
+     *
+     * @return InputDefinition An InputDefinition instance
+     */
+    protected function getNativeDefinition()
+    {
+        return $this->getDefinition();
     }
 
     /**
@@ -241,6 +334,8 @@ class Command
      * @param mixed   $default     The default value (for InputArgument::OPTIONAL mode only)
      *
      * @return Command The current instance
+     *
+     * @api
      */
     public function addArgument($name, $mode = null, $description = '', $default = null)
     {
@@ -256,9 +351,11 @@ class Command
      * @param string  $shortcut    The shortcut (can be null)
      * @param integer $mode        The option mode: One of the InputOption::VALUE_* constants
      * @param string  $description A description text
-     * @param mixed   $default     The default value (must be null for InputOption::VALUE_REQUIRED or self::VALUE_NONE)
+     * @param mixed   $default     The default value (must be null for InputOption::VALUE_REQUIRED or InputOption::VALUE_NONE)
      *
      * @return Command The current instance
+     *
+     * @api
      */
     public function addOption($name, $shortcut = null, $mode = null, $description = '', $default = null)
     {
@@ -280,54 +377,28 @@ class Command
      * @return Command The current instance
      *
      * @throws \InvalidArgumentException When command name given is empty
+     *
+     * @api
      */
     public function setName($name)
     {
-        if (false !== $pos = strrpos($name, ':')) {
-            $namespace = substr($name, 0, $pos);
-            $name = substr($name, $pos + 1);
-        } else {
-            $namespace = $this->namespace;
-        }
+        $this->validateName($name);
 
-        if (!$name) {
-            throw new \InvalidArgumentException('A command name cannot be empty.');
-        }
-
-        $this->namespace = $namespace;
         $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Returns the command namespace.
-     *
-     * @return string The command namespace
-     */
-    public function getNamespace()
-    {
-        return $this->namespace;
-    }
-
-    /**
-     * Returns the command name
+     * Returns the command name.
      *
      * @return string The command name
+     *
+     * @api
      */
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Returns the fully qualified command name.
-     *
-     * @return string The fully qualified command name
-     */
-    public function getFullName()
-    {
-        return $this->getNamespace() ? $this->getNamespace().':'.$this->getName() : $this->getName();
     }
 
     /**
@@ -336,6 +407,8 @@ class Command
      * @param string $description The description for the command
      *
      * @return Command The current instance
+     *
+     * @api
      */
     public function setDescription($description)
     {
@@ -348,6 +421,8 @@ class Command
      * Returns the description for the command.
      *
      * @return string The description for the command
+     *
+     * @api
      */
     public function getDescription()
     {
@@ -360,6 +435,8 @@ class Command
      * @param string $help The help for the command
      *
      * @return Command The current instance
+     *
+     * @api
      */
     public function setHelp($help)
     {
@@ -372,6 +449,8 @@ class Command
      * Returns the help for the command.
      *
      * @return string The help for the command
+     *
+     * @api
      */
     public function getHelp()
     {
@@ -386,7 +465,7 @@ class Command
      */
     public function getProcessedHelp()
     {
-        $name = $this->namespace.':'.$this->name;
+        $name = $this->name;
 
         $placeholders = array(
             '%command.name%',
@@ -406,9 +485,15 @@ class Command
      * @param array $aliases An array of aliases for the command
      *
      * @return Command The current instance
+     *
+     * @api
      */
     public function setAliases($aliases)
     {
+        foreach ($aliases as $alias) {
+            $this->validateName($alias);
+        }
+
         $this->aliases = $aliases;
 
         return $this;
@@ -418,6 +503,8 @@ class Command
      * Returns the aliases for the command.
      *
      * @return array An array of aliases for the command
+     *
+     * @api
      */
     public function getAliases()
     {
@@ -431,7 +518,11 @@ class Command
      */
     public function getSynopsis()
     {
-        return sprintf('%s %s', $this->getFullName(), $this->definition->getSynopsis());
+        if (null === $this->synopsis) {
+            $this->synopsis = trim(sprintf('%s %s', $this->name, $this->definition->getSynopsis()));
+        }
+
+        return $this->synopsis;
     }
 
     /**
@@ -442,24 +533,12 @@ class Command
      * @return mixed The helper value
      *
      * @throws \InvalidArgumentException if the helper is not defined
+     *
+     * @api
      */
-    protected function getHelper($name)
+    public function getHelper($name)
     {
-        return $this->application->getHelperSet()->get($name);
-    }
-
-    /**
-     * Gets a helper instance by name.
-     *
-     * @param string $name The helper name
-     *
-     * @return mixed The helper value
-     *
-     * @throws \InvalidArgumentException if the helper is not defined
-     */
-    public function __get($name)
-    {
-        return $this->application->getHelperSet()->get($name);
+        return $this->helperSet->get($name);
     }
 
     /**
@@ -479,11 +558,11 @@ class Command
             $messages[] = '<comment>Aliases:</comment> <info>'.implode(', ', $this->getAliases()).'</info>';
         }
 
-        $messages[] = $this->definition->asText();
+        $messages[] = $this->getNativeDefinition()->asText();
 
         if ($help = $this->getProcessedHelp()) {
             $messages[] = '<comment>Help:</comment>';
-            $messages[] = ' '.implode("\n ", explode("\n", $help))."\n";
+            $messages[] = ' '.str_replace("\n", "\n ", $help)."\n";
         }
 
         return implode("\n", $messages);
@@ -501,19 +580,17 @@ class Command
         $dom = new \DOMDocument('1.0', 'UTF-8');
         $dom->formatOutput = true;
         $dom->appendChild($commandXML = $dom->createElement('command'));
-        $commandXML->setAttribute('id', $this->getFullName());
-        $commandXML->setAttribute('namespace', $this->getNamespace() ? $this->getNamespace() : '_global');
-        $commandXML->setAttribute('name', $this->getName());
+        $commandXML->setAttribute('id', $this->name);
+        $commandXML->setAttribute('name', $this->name);
 
         $commandXML->appendChild($usageXML = $dom->createElement('usage'));
         $usageXML->appendChild($dom->createTextNode(sprintf($this->getSynopsis(), '')));
 
         $commandXML->appendChild($descriptionXML = $dom->createElement('description'));
-        $descriptionXML->appendChild($dom->createTextNode(implode("\n ", explode("\n", $this->getDescription()))));
+        $descriptionXML->appendChild($dom->createTextNode(str_replace("\n", "\n ", $this->getDescription())));
 
         $commandXML->appendChild($helpXML = $dom->createElement('help'));
-        $help = $this->help;
-        $helpXML->appendChild($dom->createTextNode(implode("\n ", explode("\n", $help))));
+        $helpXML->appendChild($dom->createTextNode(str_replace("\n", "\n ", $this->getProcessedHelp())));
 
         $commandXML->appendChild($aliasesXML = $dom->createElement('aliases'));
         foreach ($this->getAliases() as $alias) {
@@ -521,10 +598,17 @@ class Command
             $aliasXML->appendChild($dom->createTextNode($alias));
         }
 
-        $definition = $this->definition->asXml(true);
+        $definition = $this->getNativeDefinition()->asXml(true);
         $commandXML->appendChild($dom->importNode($definition->getElementsByTagName('arguments')->item(0), true));
         $commandXML->appendChild($dom->importNode($definition->getElementsByTagName('options')->item(0), true));
 
         return $asDom ? $dom : $dom->saveXml();
+    }
+
+    private function validateName($name)
+    {
+        if (!preg_match('/^[^\:]+(\:[^\:]+)*$/', $name)) {
+            throw new \InvalidArgumentException(sprintf('Command name "%s" is invalid.', $name));
+        }
     }
 }

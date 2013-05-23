@@ -3,7 +3,7 @@
 /*
  * This file is part of the Symfony package.
  *
- * (c) Fabien Potencier <fabien.potencier@symfony-project.com>
+ * (c) Fabien Potencier <fabien@symfony.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,7 +14,9 @@ namespace Symfony\Component\Console\Input;
 /**
  * Represents a command line argument.
  *
- * @author Fabien Potencier <fabien.potencier@symfony-project.com>
+ * @author Fabien Potencier <fabien@symfony.com>
+ *
+ * @api
  */
 class InputArgument
 {
@@ -22,10 +24,10 @@ class InputArgument
     const OPTIONAL = 2;
     const IS_ARRAY = 4;
 
-    protected $name;
-    protected $mode;
-    protected $default;
-    protected $description;
+    private $name;
+    private $mode;
+    private $default;
+    private $description;
 
     /**
      * Constructor.
@@ -36,12 +38,14 @@ class InputArgument
      * @param mixed   $default     The default value (for self::OPTIONAL mode only)
      *
      * @throws \InvalidArgumentException When argument mode is not valid
+     *
+     * @api
      */
     public function __construct($name, $mode = null, $description = '', $default = null)
     {
         if (null === $mode) {
             $mode = self::OPTIONAL;
-        } else if (is_string($mode) || $mode > 7) {
+        } elseif (!is_int($mode) || $mode > 7 || $mode < 1) {
             throw new \InvalidArgumentException(sprintf('Argument mode "%s" is not valid.', $mode));
         }
 
@@ -98,7 +102,7 @@ class InputArgument
         if ($this->isArray()) {
             if (null === $default) {
                 $default = array();
-            } else if (!is_array($default)) {
+            } elseif (!is_array($default)) {
                 throw new \LogicException('A default value for an array argument must be an array.');
             }
         }
