@@ -52,7 +52,7 @@ class Application_Plugin_Initialization extends Zend_Controller_Plugin_Abstract
 		date_default_timezone_set('America/New_York'); 
 		$uri = $request->getRequestUri();
 	
-		$site_url = 'http' . (($_SERVER['HTTPS'] == 'on') ? 's':'') . '://' . $_SERVER['HTTP_HOST'] ;
+		$site_url = 'http' . ((array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] == 'on') ? 's':'') . '://' . $_SERVER['HTTP_HOST'] ;
 		$_SESSION['site_url'] = $site_url;
 		
 		
