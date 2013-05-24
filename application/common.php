@@ -11,4 +11,16 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
-require_once APPLICATION_PATH . '/configs/config.php';
+
+// Use correct config file.
+$config = 'config.php';
+if(file_exists(APPLICATION_PATH . '/configs/local.' . $config))
+{
+	require_once APPLICATION_PATH . '/configs/local.config.php';    
+}
+else
+{
+	require_once APPLICATION_PATH . '/configs/config.php';
+}
+
+
