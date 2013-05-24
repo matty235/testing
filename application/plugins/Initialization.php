@@ -120,12 +120,11 @@ class Application_Plugin_Initialization extends Zend_Controller_Plugin_Abstract
     {
 
 		 $router = Zend_Controller_Front::getInstance()->getRouter();
-/*
+
 		 $router->addRoute('specimens',new Zend_Controller_Router_Route('specimens.php', array(
 		 		'controller' => 'index',
 		 		'action' => 'index',
 		 )));
-*/
 		 
 		 $router->addRoute('login',new Zend_Controller_Router_Route('login/:category', array(
 		  'controller' => 'auth',
