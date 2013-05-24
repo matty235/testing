@@ -1,12 +1,14 @@
 <?php
-include 'labtab_config.php';
-foreach ($config as $var => $val)
-	$zfConfigArray['configurable'][$var] = $val;
+
+$dbIni['dbName'] = 'labtab';
+$dbIni['dbUser'] = 'root';
+$dbIni['dbPass'] = '12341234';
+$dbIni['dbHost'] = 'localhost';
 	
 $zfConfigArray['configurable']['tempImageFolder'] = 'temp_images';
-$zfConfigArray['configurable']['serverImageFolder'] = 'D:/__WORK/USAcc/www2/data';
-$zfConfigArray['configurable']['webDonorsPath'] = 'D:/__WORK/USAcc/www2/data/webdonors/';
-$zfConfigArray['configurable']['uploadPath'] = "D:/__WORK/USAcc/www2/public/filetransfer/";
+$zfConfigArray['configurable']['serverImageFolder'] = APPLICATION_PATH . '/../data/requisitions/';
+$zfConfigArray['configurable']['webDonorsPath'] = APPLICATION_PATH . '/../data/webdonors/';
+$zfConfigArray['configurable']['uploadPath'] = APPLICATION_PATH . '/../data/attachments/';
 
 
 #$zfConfigArray['configurable']['tempImageFolder'] = 'temp_images';
@@ -38,10 +40,6 @@ $zfConfigArray['appnamespace'] = 'Application';
 $zfConfigArray['resources']['frontController']['controllerDirectory'] = APPLICATION_PATH . '/controllers';
 $zfConfigArray['resources']['frontController']['params']['displayExceptions'] = 1;
 
-$dbIni['dbName'] = 'labtab';
-$dbIni['dbUser'] = 'root';
-$dbIni['dbPass'] = '12341234';
-$dbIni['dbHost'] = 'localhost';
 
 $zfConfigArray['resources']['db']['adapter']                          =  'pdo_mysql';
 $zfConfigArray['resources']['db']['params']['dbname']                 =  $dbIni['dbName'];
