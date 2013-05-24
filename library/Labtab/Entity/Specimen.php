@@ -761,6 +761,7 @@ class Specimen extends AbstractEntity
     
     public function getImageUrls()
     {
+    	$images = array();
     	$config = \Zend_Registry::get('config');
     	$tempFolder = $config['configurable']['tempImageFolder'] . "/";
     	$base = $_SERVER['DOCUMENT_ROOT'] . "/$tempFolder" ;

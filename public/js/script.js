@@ -10,54 +10,6 @@ function initDetail(){
           action: '/filetransfer/do_upload.php?number=' + number + '&from=' + from// path to server-side upload script                    
       });
 
-      var finalize_uploader = new qq.FileUploader({                                        
-          element: document.getElementById('finalize_uploader'),
-          debug: true,
-          sizeLimit: '20971520',
-          maxConnections: '50',   // Maximum of 50 simultaneous uploads
-          uploadButtonText: 'Finalize',
-          action: '/filetransfer/do_upload.php?number=' + number + '&from=' + from,// path to server-side upload script                    
-          onComplete: function(id, fileName, responseJSON){
-              var form_data = {
-                  portal_user: email,
-                  finalize_changed_to: '1',
-                  number: number,
-                  ajax: '1'		
-              };
-              $.ajax({
-                  url: '/specimens/finalize',
-                  type: 'POST',
-                  data: form_data,
-                  success: function(msg) { 
-                      if (msg == 'success') {
-                          $.prompt("Finalization comlete", {
-                              buttons: {'View the specimen': 0 },
-                              focus: 1,
-                              submit:function(e,v,m,f){ 
-                                  if(v==0) {
-                                      $.prompt.close();
-                                      window.location.assign('/specimens/detail/number/' + number);
-                                  }
-                                  return false;
-                              }
-                          }); 
-                          
-                      } else {
-                          $.prompt("Finalization failed", {
-                              buttons: {'Continue': 0 },
-                              focus: 1,
-                              submit:function(e,v,m,f){ 
-                                  if(v==0) {
-                                      $.prompt.close();                                               
-                                  }
-                                  return false;
-                              }
-                          });
-                      }
-                  }
-              });
-          }
-      });
      
       
   
@@ -225,7 +177,58 @@ function finalization() {
     $.prompt(unfinalizeStates);  
 }
 
+function initFinalize()
+{
 
+      var finalize_uploader = new qq.FileUploader({                                        
+          element: document.getElementById('finalize_uploader'),
+          debug: true,
+          sizeLimit: '20971520',
+          maxConnections: '50',   // Maximum of 50 simultaneous uploads
+          uploadButtonText: 'Finalize',
+          action: '/filetransfer/do_upload.php?number=' + number + '&from=' + from,// path to server-side upload script                    
+          onComplete: function(id, fileName, responseJSON){
+              var form_data = {
+                  portal_user: email,
+                  finalize_changed_to: '1',
+                  number: number,
+                  ajax: '1'		
+              };
+              $.ajax({
+                  url: '/specimens/finalize',
+                  type: 'POST',
+                  data: form_data,
+                  success: function(msg) { 
+                      if (msg == 'success') {
+                          $.prompt("Finalization comlete", {
+                              buttons: {'View the specimen': 0 },
+                              focus: 1,
+                              submit:function(e,v,m,f){ 
+                                  if(v==0) {
+                                      $.prompt.close();
+                                      window.location.assign('/specimens/detail/number/' + number);
+                                  }
+                                  return false;
+                              }
+                          }); 
+                          
+                      } else {
+                          $.prompt("Finalization failed", {
+                              buttons: {'Continue': 0 },
+                              focus: 1,
+                              submit:function(e,v,m,f){ 
+                                  if(v==0) {
+                                      $.prompt.close();                                               
+                                  }
+                                  return false;
+                              }
+                          });
+                      }
+                  }
+              });
+          }
+      });
+}
 
 function promptFirstview()
 {
@@ -556,7 +559,7 @@ function checkAllBox(me,chk_all_class,callback)
 
 function cb_user(data){
   if(data=='success'){
-      window.location.href='/specimens.php';
+      window.location.href='/specimens';
   } else {
       $('#message').html('Invalid username or password');
   }
@@ -651,7 +654,7 @@ function initializeIndex(){
 // DONORS - INDEX
 function initDonors()
 {
-	alert('hi');
+
                 getDonors();
                 $('#firstInput').bind('keypress', function(e) {
                     var keyCode = e.keyCode || e.which;

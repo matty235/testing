@@ -174,11 +174,14 @@ $label_text = $s->getLabelText();
                                     }
                                     ?>
                                 </form>
+                                
                                 <?php
                                 if ($_SESSION['email'] == 'jlupi@usaccuscreen.com' && $label_text == 'court' && $finalized == '0') 
                                 {
                                     // Court mode - Begin finalization
                                     echo '<span style="display: inline-block;"><div id="finalize_uploader"></div></span>';
+                                    echo '<script type="text/javascript">initFinalize();</script>';
+                                    
                                 } else if ($_SESSION['email'] == 'jlupi@usaccuscreen.com' && $label_text == 'court' && $finalized == '1') 
                                 {
                                     // Court mode - Begin unfinalization
